@@ -1,0 +1,20 @@
+zookeeper:
+  image: confluentinc/cp-zookeeper
+  hostname: zookeeper
+  ports:
+    - 2181:2181
+  environment:
+    SERVICE_NAME: zookeeper
+    ZOOKEEPER_CLIENT_PORT: 2181
+
+kafka:
+  image: confluentinc/cp-kafka
+  hostname: kafka
+  ports:
+    - 9092:9092
+  links:
+    - zookeeper:zookeeper
+  environment:
+    KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+    KAFKA_ADVERTISED_LISTENERS: "PLAINTEXT://$DOCKER_IP:9092"
+    KAFKA_CREATE_TOPICS:
