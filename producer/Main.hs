@@ -22,7 +22,6 @@ import           Options
 main :: IO ()
 main = do
   opt <- parseOptions
-  T.putStrLn "Enter messages (one per line)"
 
   runConduitRes $
     userMessagesSource
