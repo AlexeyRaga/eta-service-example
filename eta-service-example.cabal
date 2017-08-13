@@ -65,6 +65,7 @@ executable consumer
                       , eta-service-example
                       , eta-kafka-client > 0.5.0
                       , eta-kafka-conduit > 0.5.0
+                      , exceptions
                       , mtl
                       , optparse-applicative
                       , resourcet
