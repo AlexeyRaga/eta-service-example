@@ -1,6 +1,12 @@
 # Eta: Kafka client example
 
 This example demonstrates how to use Kafka bindings for [Eta](http://eta-lang.org).
+Libraries that are used and demonstrated in this project:
+- [Kafka client](https://github.com/haskell-works/eta-kafka-client)
+- [Kafka client conduit](https://github.com/haskell-works/eta-kafka-conduit)
+- [Avro](https://github.com/haskell-works/hw-haskell-avro) (Native Haskell implementation for [Avro](https://avro.apache.org/docs/current/) serialization patched for Eta)
+
+## Project description
 
 The example simulates an overly simplified chat system:
 
@@ -15,7 +21,7 @@ For this example you should have 3 components running:
 2. Consumer service
 
 ### Start Kafka
-If you don't have Kafka installed and running already use `docker-compose` provided with this example:
+If you don't have Kafka installed and running use `docker-compose` configuration provided with this example:
 
 ```
 $ DOCKER_IP=<your real ip address> docker-compose up -d
@@ -27,14 +33,14 @@ $ DOCKER_IP=<your real ip address> docker-compose up -d
 Open a new terminal and start `producer`:
 
 ```
-$ etlas run producer -- --kafka-broker <your ip address>:9092 --kafka-group-id test-1 --input-topic simple-chat
+$ etlas run producer -- --kafka-broker <your ip address>:9092 --input-topic simple-chat
 ```
 
 ### Start consumer service
 Open a new terminal and start `consumer`:
 
 ```
-etlas run consumer -- --kafka-broker <your ip address>:9092 --kafka-group-id test-1 --input-topic simple-chat
+etlas run consumer -- --kafka-broker <your ip address>:9092 --input-topic simple-chat
 ```
 
 ### Send some messages

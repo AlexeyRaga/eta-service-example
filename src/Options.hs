@@ -31,6 +31,7 @@ options = Options
         (  long "kafka-group-id"
         <> short 'g'
         <> metavar "GROUP_ID"
+        <> showDefault <> value "ex-chat-1"
         <> help "Kafka consumer group id"))
   <*> ( TopicName <$> strOption
         (  long "input-topic"
