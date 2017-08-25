@@ -7,29 +7,29 @@ import qualified Data.Avro.Types    as AT
 import           Data.List.NonEmpty
 import           Data.Text
 
-data Message = Message
+data ChatMessage = ChatMessage
   { messageTo   :: Maybe Text
   , messageText :: Text
   } deriving (Show, Eq)
 
-messageSchema :: Schema
-messageSchema =
-  Record "Message" Nothing [] Nothing Nothing
+chatMessageSchema :: Schema
+chatMessageSchema =
+  Record "ChatMessage" Nothing [] Nothing Nothing
     [ fld "to"        (mkUnion $ Null :| [String])  Nothing
     , fld "text"      String                        Nothing
     ]
     where
      fld nm ty def = Field nm [] Nothing Nothing ty def
 
-instance ToAvro Message where
-  schema = pure messageSchema
-  toAvro msg = record messageSchema
+instance ToAvro ChatMessage where
+  schema = pure chatMessageSchema
+  toAvro msg = record chatMessageSchema
              [ "to"         .= messageTo msg
              , "text"       .= messageText msg
              ]
 
-instance FromAvro Message where
+instance FromAvro ChatMessage where
   fromAvro (AT.Record _ r) =
-    Message <$> r .: "to"
-            <*> r .: "text"
-  fromAvro r = badValue r "Message"
+    ChatMessage <$> r .: "to"
+                <*> r .: "text"
+  fromAvro r = badValue r "ChatMessage"

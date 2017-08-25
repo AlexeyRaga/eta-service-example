@@ -24,21 +24,32 @@ main = do
   opt <- parseOptions
 
   runConduitRes $
-    userMessagesSource
-    .| L.map (mkProdRecord (optInputTopic opt))
-    .| kafkaSink (producerProps opt)
+    userMessagesSource                          -- read stream of ChatMessage from the console
+    .| L.map (mkProdRecord (optChatTopic opt))  -- convert each ChatMessage to ProducerRecord
+    .| kafkaSink (producerProps opt)            -- send each ProducerRecord to Kafka
 
+-- | Create producer properties
 producerProps :: Options -> ProducerProperties
-producerProps opts = producerBrokersList [optKafkaBroker opts]
+producerProps opts =
+  producerBrokersList [optKafkaBroker opts]    -- at least one "bootstrap" broker address (host:port)
 
-userMessagesSource :: MonadIO m => Source m Message
-userMessagesSource = yieldM (parseMessage <$> (liftIO T.getLine)) >> userMessagesSource
+-- | Source of messages which user types in his/her console
+userMessagesSource :: MonadIO m => Source m ChatMessage
+userMessagesSource =
+  yieldM (parseMessage <$> (liftIO T.getLine)) >> userMessagesSource
 
+-- | Wrap chat message into ProducerRecord
 mkProdRecord :: ToAvro a => TopicName -> a -> ProducerRecord
-mkProdRecord t v = ProducerRecord t Nothing Nothing (Just . BL.toStrict $ Avro.encode v)
+mkProdRecord t v = ProducerRecord
+  t                                    -- target topic
+  Nothing                              -- no specific partition
+  Nothing                              -- no specified key (could be a chat room name)
+  (Just . BL.toStrict $ Avro.encode v) -- payload encoded in Avro
 
-parseMessage :: Text -> Message
-parseMessage l = Message
+-- | Parses user's text into ChatMessage
+-- A message can be a plain text or a text prefixed with "@username"
+parseMessage :: Text -> ChatMessage
+parseMessage l = ChatMessage
   { messageTo   = if T.null to then Nothing else Just to
   , messageText = T.dropWhile isSpace txt
   }

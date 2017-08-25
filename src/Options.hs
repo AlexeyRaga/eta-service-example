@@ -10,7 +10,7 @@ data Options = Options
   { optKafkaBroker      :: BrokerAddress
   , optKafkaPollTimeout :: Millis
   , optKafkaGroupId     :: ConsumerGroupId
-  , optInputTopic       :: TopicName
+  , optChatTopic        :: TopicName
   } deriving (Show)
 
 options :: Parser Options
@@ -34,7 +34,7 @@ options = Options
         <> showDefault <> value "ex-chat-1"
         <> help "Kafka consumer group id"))
   <*> ( TopicName <$> strOption
-        (  long "input-topic"
+        (  long "chat-topic"
         <> short 'i'
         <> metavar "TOPIC"
         <> help "Input topic"))

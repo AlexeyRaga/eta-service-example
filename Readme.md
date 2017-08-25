@@ -33,14 +33,14 @@ $ DOCKER_IP=<your real ip address> docker-compose up -d
 Open a new terminal and start `producer`:
 
 ```
-$ etlas run producer -- --kafka-broker <your ip address>:9092 --input-topic simple-chat
+$ etlas run producer -- --kafka-broker $DOCKER_IP:9092 --chat-topic simple-chat
 ```
 
 ### Start consumer service
 Open a new terminal and start `consumer`:
 
 ```
-etlas run consumer -- --kafka-broker <your ip address>:9092 --input-topic simple-chat
+etlas run consumer -- --kafka-broker $DOCKER_IP:9092 --chat-topic simple-chat
 ```
 
 ### Send some messages
